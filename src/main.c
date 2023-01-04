@@ -115,7 +115,7 @@ static double calculate_lift_per_unit_length(const PreProcessedDataPoint *data, 
 
 static double uncertain_with_error(double best_guess, double error) {
 #ifndef LOCAL
-    return libUncertainDoubleUniformDist(best_guess - )
+    return libUncertainDoubleUniformDist(best_guess - error / 2, best_guess + error / 2);
 #else
     return best_guess;
 #endif // LOCAL
