@@ -40,3 +40,18 @@ Clicking this button logs me out from github -- which is slightly odd behaviour.
 Clicking this button umounts the storage -- given the button is a happy green button with a tick that seems suprising.
 
 ![](images/notes/odd-umount-storage-button.png)
+
+### Docs
+
+#### Create uncertain values
+
+Here I would expect to read how to create an uncertain value from a best guess and a standard deviation, or from upper and lower bounds.
+There is probably a good reason why those functions don't live here but a mention of them in the docs would have helped me.
+
+![](images/notes/inserting-uncertain-docs.png)
+
+From the demos I found the function `libUncertainDoubleUniformDist`, which is documented here (you can find it by searching):
+
+![](images/notes/the-useful-functions-live-here-you-can-run-but-cannot-hide.png)
+
+If it is used in the demos it probably should be publicly documented.

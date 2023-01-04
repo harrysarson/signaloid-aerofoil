@@ -1,9 +1,15 @@
 #include <math.h>
 #include <stdio.h>
 
+#ifndef LOCAL
+
+#include <uncertain.h>
+
+#endif // Local
+
 /// Model of lift over aerofoil.
 ///
-/// All quantites are in SI units.
+/// All quantities are in SI units.
 
 
 typedef struct {
@@ -52,7 +58,7 @@ typedef enum {
     PreProcessResult_OutputTooShort,
 } PreProcessResult;
 
-double velocity_squared_from_pitot_static(double pitot_static_height_difference, const ModelParameters *params) {
+static double velocity_squared_from_pitot_static(double pitot_static_height_difference, const ModelParameters *params) {
     return
         2 * params->pitot_static_fluid_density * params->g * pitot_static_height_difference
         / params->stream_fluid_density;
@@ -60,7 +66,7 @@ double velocity_squared_from_pitot_static(double pitot_static_height_difference,
 }
 
 /// Produce `PreProcessedDataPoint`s sutiable for calculating aerofoil lift.
-PreProcessResult pre_process(
+static PreProcessResult pre_process(
   const ModelParameters *params,
   const RawDataPoint *raw_data, size_t raw_data_len,
   PreProcessedDataPoint *data_out, size_t out_len
@@ -96,7 +102,7 @@ PreProcessResult pre_process(
 }
 
 
-double calculate_lift_per_unit_length(const PreProcessedDataPoint *data, size_t len) {
+static double calculate_lift_per_unit_length(const PreProcessedDataPoint *data, size_t len) {
 
     double lift = 0;
 
@@ -107,26 +113,69 @@ double calculate_lift_per_unit_length(const PreProcessedDataPoint *data, size_t 
     return lift;
 }
 
+static double uncertain_with_error(double best_guess, double error) {
+#ifndef LOCAL
+    return libUncertainDoubleUniformDist(best_guess - )
+#else
+    return best_guess;
+#endif // LOCAL
+}
+
+static double uncertain_with_fractional_error(double best_guess, double fractional_error) {
+    return uncertain_with_error(best_guess, fabs(best_guess) * fractional_error);
+}
+
 int main() {
-    enum size_t { n_data_points = 2 };
+    enum size_t { n_data_points = 6 };
+
+    double error_in_height_differences = 0.2e-3;
+
+    // Uncertainty in angle of each section in radians
+    double error_in_shape = M_PI * 2 / 5e-3;
+
     RawDataPoint data[n_data_points] = {
         {
-            .pitot_static_height_difference = 10,
-            .angle_between_normal_and_vertical = 0,
-            .section_length = 1,
+            .pitot_static_height_difference = uncertain_with_error(155e-3, error_in_height_differences),
+            .angle_between_normal_and_vertical = uncertain_with_error(0, error_in_shape),
+            .section_length = uncertain_with_fractional_error(0.1, 0.05),
         },
         {
-            .pitot_static_height_difference = 13,
-            .angle_between_normal_and_vertical = -M_PI,
-            .section_length = 1,
+            .pitot_static_height_difference = uncertain_with_error(109e-3, error_in_height_differences),
+            .angle_between_normal_and_vertical = uncertain_with_error(0, error_in_shape),
+            .section_length = uncertain_with_fractional_error(0.1, 0.05),
         },
+        {
+            .pitot_static_height_difference = uncertain_with_error(124e-3, error_in_height_differences),
+            .angle_between_normal_and_vertical = uncertain_with_error(0, error_in_shape),
+            .section_length = uncertain_with_fractional_error(0.1, 0.05),
+        },
+        {
+            .pitot_static_height_difference = uncertain_with_error(120e-3, error_in_height_differences),
+            .angle_between_normal_and_vertical = uncertain_with_error(0, error_in_shape),
+            .section_length = uncertain_with_fractional_error(0.1, 0.05),
+        },
+        {
+            .pitot_static_height_difference = uncertain_with_error(132e-3, error_in_height_differences),
+            .angle_between_normal_and_vertical = uncertain_with_error(0, error_in_shape),
+            .section_length = uncertain_with_fractional_error(0.1, 0.05),
+        },
+        {
+            .pitot_static_height_difference = uncertain_with_error(135e-3, error_in_height_differences),
+            .angle_between_normal_and_vertical = uncertain_with_error(0, error_in_shape),
+            .section_length = uncertain_with_fractional_error(0.1, 0.05),
+        },
+        // {
+        //     .pitot_static_height_difference = 13,
+        //     .angle_between_normal_and_vertical = -M_PI,
+        //     .section_length = 1,
+        // },
     };
 
     ModelParameters params = {
-        .stream_fluid_density = 10,
-        .pitot_static_fluid_density = 10,
-        .g = 10,
-        .airflow_pitot_static_height_difference = 10,
+        .stream_fluid_density = uncertain_with_error(0.965, 0.00163),
+        .pitot_static_fluid_density = 1000,
+        .g = 0.981,
+        .airflow_pitot_static_height_difference = uncertain_with_error(0.057, error_in_height_differences),
     };
 
     printf("x %d\n", (int)(sizeof(data)));
