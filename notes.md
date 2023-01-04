@@ -55,3 +55,19 @@ From the demos I found the function `libUncertainDoubleUniformDist`, which is do
 ![](images/notes/the-useful-functions-live-here-you-can-run-but-cannot-hide.png)
 
 If it is used in the demos it probably should be publicly documented.
+
+### Running code on siganloid
+
+> These runs are with commit 8d1c4a2c423a02
+
+- Local runs give a best guess of 42.
+- C0-Reference gives answers in range `[-30,30]`.
+- C0-L+ gives a best guess of 14.8 but then a probability distribution that does not agree.
+  The green line (presumably the mean) is at 2.
+  ![](images/notes/distribution-for-c0-lplus-8d1c4a2c423a02.png)
+- C0-bypass did not work at all.
+  C0-bypass does not work for hello world examples either. Oops.
+  ![](images/notes/c0-bypass-broken.png)
+- C0 gives a answers in the range `[-40, 40]`
+- Presumably I have accidentally inserted some massive uncertainty into the model that makes everything fall over.
+

@@ -65,7 +65,7 @@ static double velocity_squared_from_pitot_static(double pitot_static_height_diff
 
 }
 
-/// Produce `PreProcessedDataPoint`s sutiable for calculating aerofoil lift.
+/// Produce `PreProcessedDataPoint`s suitable for calculating aerofoil lift.
 static PreProcessResult pre_process(
   const ModelParameters *params,
   const RawDataPoint *raw_data, size_t raw_data_len,
@@ -89,6 +89,8 @@ static PreProcessResult pre_process(
         // This pressure is offset by the atmospheric pressure. That is fine because atmospheric pressure
         // is constant above and below the wing so cannot contribute to lift.
         double pressure = (airflow_speed_squared - v_squared_here) * params->stream_fluid_density / 2;
+
+        printf("pressure for data point %lu is %f\n", i, pressure);
 
         PreProcessedDataPoint ret = {
             .pressure = pressure,
@@ -117,6 +119,7 @@ static double uncertain_with_error(double best_guess, double error) {
 #ifndef LOCAL
     return libUncertainDoubleUniformDist(best_guess - error / 2, best_guess + error / 2);
 #else
+    (void)error;
     return best_guess;
 #endif // LOCAL
 }
