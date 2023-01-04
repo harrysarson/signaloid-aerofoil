@@ -90,7 +90,7 @@ static PreProcessResult pre_process(
         // is constant above and below the wing so cannot contribute to lift.
         double pressure = (airflow_speed_squared - v_squared_here) * params->stream_fluid_density / 2;
 
-        printf("pressure for data point %lu is %f\n", i, pressure);
+        printf("pressure for data point %zu is %f\n", i, pressure);
 
         PreProcessedDataPoint ret = {
             .pressure = pressure,
@@ -109,7 +109,11 @@ static double calculate_lift_per_unit_length(const PreProcessedDataPoint *data, 
     double lift = 0;
 
     for (size_t i = 0; i < len; i++) {
-        lift -= data[i].pressure * cos(data[i].angle_between_normal_and_vertical) * data[i].section_length;
+        double lift_i = -data[i].pressure * cos(data[i].angle_between_normal_and_vertical) * data[i].section_length;
+
+        printf("lift for data point %zu is %f\n", i, lift_i);
+
+        lift += lift_i;
     }
 
     return lift;

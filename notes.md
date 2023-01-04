@@ -58,7 +58,7 @@ If it is used in the demos it probably should be publicly documented.
 
 ### Running code on siganloid
 
-> These runs are with commit 8d1c4a2c423a02
+#### commit 8d1c4a2c423a02
 
 - Local runs give a best guess of 42.
 - C0-Reference gives answers in range `[-30,30]`.
@@ -71,3 +71,10 @@ If it is used in the demos it probably should be publicly documented.
 - C0 gives a answers in the range `[-40, 40]`
 - Presumably I have accidentally inserted some massive uncertainty into the model that makes everything fall over.
 
+#### commit ff8680792bb2
+
+This commits logs the pressure at each datapoint.
+
+- C0-L+ gives numbers for the pressure that agrees with local builds and has sensible uncertainty.
+  ![](images/notes/c0-lplus-ff8680792bb2-pressure-log.png)
+- The final result still makes no sense, something must go wrong in the numerical integration step.
