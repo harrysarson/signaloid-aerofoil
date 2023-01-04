@@ -78,3 +78,13 @@ This commits logs the pressure at each datapoint.
 - C0-L+ gives numbers for the pressure that agrees with local builds and has sensible uncertainty.
   ![](images/notes/c0-lplus-ff8680792bb2-pressure-log.png)
 - The final result still makes no sense, something must go wrong in the numerical integration step.
+
+#### commit 078ed1d37f41
+
+This commit logs the lift at each datapoint.
+
+- C0-L+ gives nonsense numbers for the lift at each datapoint.
+  You see the local results and the signaloid results compared.
+  The signaloid numbers make no sense.
+  Why not?
+  ![](images/notes/c0-lpus-078ed1d37f41-wonky-lift-numbers.png)
