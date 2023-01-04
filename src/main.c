@@ -109,7 +109,7 @@ static double calculate_lift_per_unit_length(const PreProcessedDataPoint *data, 
     double lift = 0;
 
     for (size_t i = 0; i < len; i++) {
-        double lift_i = -data[i].pressure /* cos(data[i].angle_between_normal_and_vertical)  */ * data[i].section_length;
+        double lift_i = -data[i].pressure * cos(data[i].angle_between_normal_and_vertical)  * data[i].section_length;
 
         printf("lift for data point %zu is %f\n", i, lift_i);
 
@@ -138,7 +138,9 @@ int main() {
     double error_in_height_differences = 0.2e-3;
 
     // Uncertainty in angle of each section in radians
-    double error_in_shape = M_PI * 2 / 5e-3;
+    double error_in_shape = M_PI * 2 * 5e-3;
+
+    printf("error %f\n", error_in_shape);
 
     RawDataPoint data[n_data_points] = {
         {

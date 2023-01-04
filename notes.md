@@ -88,3 +88,15 @@ This commit logs the lift at each datapoint.
   The signaloid numbers make no sense.
   Why not?
   ![](images/notes/c0-lpus-078ed1d37f41-wonky-lift-numbers.png)
+
+#### commit 080955220159f16a4
+
+This commits removes the cosine, removing would be correct if all the angles are 0.
+
+- C0-L+ gives **sensible** lift numbers again!
+  ![](images/notes/c0-lplus-080955220159f16a4-normal-lift-numbers-without-cosine.png)
+- The implementation of uncertainty propagation through the cosine function must be buggy.
+- Found the error, it was my fault.
+  Sorry for being to quick to blame uncertainty propagation through cosine.
+- My error in the angles was 200 times `2 * pi` rather than being a 200th of `2 * pi`.
+- No wonder the results were all over the place.
