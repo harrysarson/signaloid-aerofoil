@@ -41,9 +41,17 @@ Clicking this button umounts the storage -- given the button is a happy green bu
 
 ![](images/notes/odd-umount-storage-button.png)
 
-### Docs
+### Misleading run time icons
 
-#### Create uncertain values
+These icons indicate "time since task ran", you can be sure of this because the times increase when you refresh the page.
+I initially assumed that they instead showed the duration of the task.
+The UI should probably make this clearer.
+
+![](images/notes/missleading-time-icons.png)
+
+## Docs
+
+### Create uncertain values
 
 Here I would expect to read how to create an uncertain value from a best guess and a standard deviation, or from upper and lower bounds.
 There is probably a good reason why those functions don't live here but a mention of them in the docs would have helped me.
@@ -56,9 +64,9 @@ From the demos I found the function `libUncertainDoubleUniformDist`, which is do
 
 If it is used in the demos it probably should be publicly documented.
 
-### Running code on siganloid
+## Running code on siganloid
 
-#### commit 8d1c4a2c423a02
+### commit 8d1c4a2c423a02
 
 - Local runs give a best guess of 42.
 - C0-Reference gives answers in range `[-30,30]`.
@@ -71,7 +79,7 @@ If it is used in the demos it probably should be publicly documented.
 - C0 gives a answers in the range `[-40, 40]`
 - Presumably I have accidentally inserted some massive uncertainty into the model that makes everything fall over.
 
-#### commit ff8680792bb2
+### commit ff8680792bb2
 
 This commits logs the pressure at each datapoint.
 
@@ -79,7 +87,7 @@ This commits logs the pressure at each datapoint.
   ![](images/notes/c0-lplus-ff8680792bb2-pressure-log.png)
 - The final result still makes no sense, something must go wrong in the numerical integration step.
 
-#### commit 078ed1d37f41
+### commit 078ed1d37f41
 
 This commit logs the lift at each datapoint.
 
@@ -89,7 +97,7 @@ This commit logs the lift at each datapoint.
   Why not?
   ![](images/notes/c0-lpus-078ed1d37f41-wonky-lift-numbers.png)
 
-#### commit 080955220159f16a4
+### commit 080955220159f16a4
 
 This commits removes the cosine, removing would be correct if all the angles are 0.
 
@@ -101,7 +109,7 @@ This commits removes the cosine, removing would be correct if all the angles are
 - My error in the angles was 200 times `2 * pi` rather than being a 200th of `2 * pi`.
 - No wonder the results were all over the place.
 
-#### commit 8a27d670b48bef0
+### commit 8a27d670b48bef0
 
 This commit adds the cosine back in and fixes the errors in the angles.
 

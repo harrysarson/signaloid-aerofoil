@@ -128,7 +128,7 @@ static double uncertain_with_error(double best_guess, double error) {
     // use a normal distribution here
     double range = error * sqrt(12);
 #ifndef LOCAL
-    return libUncertainDoubleGaussDist(best_guess, error);
+    return libUncertainDoubleGaussDist(best_guess, error/100);
     // return libUncertainDoubleNormalDist(best_guess - range / 2, best_guess + range / 2);
 #else
     (void)range;
