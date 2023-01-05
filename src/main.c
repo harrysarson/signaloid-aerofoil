@@ -113,7 +113,7 @@ static double calculate_lift_per_unit_length(const PreProcessedDataPoint *data, 
     for (size_t i = 0; i < len; i++) {
         double lift_i = -data[i].pressure * cos(data[i].angle_between_normal_and_vertical) * data[i].section_length;
 
-#ifdef
+#ifdef DEBUG
         printf("lift for data point %zu is %f, %f\n", i, cos(data[i].angle_between_normal_and_vertical), lift_i);
 #endif
 
