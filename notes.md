@@ -100,3 +100,10 @@ This commits removes the cosine, removing would be correct if all the angles are
   Sorry for being to quick to blame uncertainty propagation through cosine.
 - My error in the angles was 200 times `2 * pi` rather than being a 200th of `2 * pi`.
 - No wonder the results were all over the place.
+
+#### commit 8a27d670b48bef0
+
+This commit adds the cosine back in and fixes the errors in the angles.
+
+- Now C0-L+ gives and answer that matches the local results and also gives a sensible probability distribution.
+  ![](images/notes/c0-lplus-8a27d670b48bef0-it-works.png)
