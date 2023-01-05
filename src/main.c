@@ -90,7 +90,9 @@ static PreProcessResult pre_process(
         // is constant above and below the wing so cannot contribute to lift.
         double pressure = (airflow_speed_squared - v_squared_here) * params->stream_fluid_density / 2;
 
-        // printf("pressure for data point %zu is %f\n", i, pressure);
+#ifdef DEBUG
+        printf("pressure for data point %zu is %f\n", i, pressure);
+#endif
 
         PreProcessedDataPoint ret = {
             .pressure = pressure,
@@ -103,7 +105,7 @@ static PreProcessResult pre_process(
     return PreProcessResult_Ok;
 }
 
-
+/// Calculate the lift per unit length on an aerofoil.
 static double calculate_lift_per_unit_length(const PreProcessedDataPoint *data, size_t len) {
 
     double lift = 0;
@@ -111,7 +113,9 @@ static double calculate_lift_per_unit_length(const PreProcessedDataPoint *data, 
     for (size_t i = 0; i < len; i++) {
         double lift_i = -data[i].pressure * cos(data[i].angle_between_normal_and_vertical) * data[i].section_length;
 
-        // printf("lift for data point %zu is %f, %f\n", i, cos(data[i].angle_between_normal_and_vertical), lift_i);
+#ifdef
+        printf("lift for data point %zu is %f, %f\n", i, cos(data[i].angle_between_normal_and_vertical), lift_i);
+#endif
 
         lift += lift_i;
     }
@@ -120,9 +124,12 @@ static double calculate_lift_per_unit_length(const PreProcessedDataPoint *data, 
 }
 
 static double uncertain_with_error(double best_guess, double error) {
+    // Interpret the error as the stddev of a uniform distribution. We could alternatively
+    // use a normal distribution here
     double range = error * sqrt(12);
 #ifndef LOCAL
-    return libUncertainDoubleUniformDist(best_guess - range / 2, best_guess + range / 2);
+    return libUncertainFloatGaussDist(best_guess, error);
+    // return libUncertainDoubleNormalDist(best_guess - range / 2, best_guess + range / 2);
 #else
     (void)range;
     return best_guess;
@@ -236,10 +243,13 @@ int main() {
 
         if (res != PreProcessResult_Ok) {
             fprintf(stderr, "Error preprocessing data points! Code was %d\n", (int)res);
+            return 1;
         }
     }
 
     double lift = calculate_lift_per_unit_length(processed_data, n_data_points);
 
     printf("Lift is %f -+ %f\n", lift, get_uncertain_error(lift));
+
+    return 0;
 }
