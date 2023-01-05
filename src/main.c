@@ -150,7 +150,6 @@ int main() {
     // Uncertainty in angle of each section in radians
     double error_in_shape = M_PI * 2 * 5e-3;
 
-    printf("error %f\n", error_in_shape);
 
     RawDataPoint data[n_data_points] = {
         // Upward facing data-points
@@ -242,5 +241,5 @@ int main() {
 
     double lift = calculate_lift_per_unit_length(processed_data, n_data_points);
 
-    printf("Lift is %f\n", lift);
+    printf("Lift is %f -+ %f\n", lift, get_uncertain_error(lift));
 }
