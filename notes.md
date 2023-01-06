@@ -1,4 +1,6 @@
-notes
+# notes
+
+Collection of more raw thoughts as I worked through this problem.
 
 ## Data
 
@@ -41,6 +43,10 @@ Clicking this button umounts the storage -- given the button is a happy green bu
 
 ![](images/notes/odd-umount-storage-button.png)
 
+Clicking this button unlinks the repo -- again the button is green so I kept clicking it by accident.
+
+![](images/notes/odd-unlink-repo-button.png)
+
 ### Misleading run time icons
 
 These icons indicate "time since task ran", you can be sure of this because the times increase when you refresh the page.
@@ -48,6 +54,10 @@ I initially assumed that they instead showed the duration of the task.
 The UI should probably make this clearer.
 
 ![](images/notes/missleading-time-icons.png)
+
+### Strange results with `libUncertainDoubleGaussDist`
+
+I talk about these in the README.
 
 ## Docs
 

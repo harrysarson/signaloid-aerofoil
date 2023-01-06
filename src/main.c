@@ -43,8 +43,11 @@ typedef struct {
     /// Density of the fluid in the pitot_static_tube.
     double pitot_static_fluid_density;
 
-    /// Gravitational constant
+    /// Gravitational constant.
     double g;
+
+    /// Adjustment due to angle of pitot-static tube.
+    double tube_angle_adjust;
 
     /// Measured on far from the aerofoil, used to determine airflow speed.
     double airflow_pitot_static_height_difference;;
@@ -56,13 +59,27 @@ typedef enum {
     PreProcessResult_Ok,
     PreProcessResult_InputNull,
     PreProcessResult_OutputTooShort,
+    PreProcessResult_HeightDifferenceNegative,
 } PreProcessResult;
 
-static double velocity_squared_from_pitot_static(double pitot_static_height_difference, const ModelParameters *params) {
-    return
-        2 * params->pitot_static_fluid_density * params->g * pitot_static_height_difference
-        / params->stream_fluid_density;
 
+/// Calculate flow velocity from pitot_static reading
+static PreProcessResult velocity_squared_from_pitot_static(double pitot_static_height_difference, const ModelParameters *params, double *out) {
+
+    if (out == NULL) {
+        return PreProcessResult_InputNull;
+    }
+    if (pitot_static_height_difference < 0) {
+        return PreProcessResult_HeightDifferenceNegative;
+    }
+
+    double rho_f = params->stream_fluid_density;
+    double rho_w = params->pitot_static_fluid_density;
+    double dh = pitot_static_height_difference;
+    double K = params->tube_angle_adjust;
+
+    *out = 2 * rho_w * params->g * dh * K / rho_f;
+    return PreProcessResult_Ok;
 }
 
 /// Produce `PreProcessedDataPoint`s suitable for calculating aerofoil lift.
@@ -80,11 +97,33 @@ static PreProcessResult pre_process(
         return PreProcessResult_OutputTooShort;
     }
 
-    double airflow_speed_squared = velocity_squared_from_pitot_static(params->airflow_pitot_static_height_difference, params);
+    double airflow_speed_squared;
+    {
+        PreProcessResult res = velocity_squared_from_pitot_static(
+            params->airflow_pitot_static_height_difference,
+            params,
+            &airflow_speed_squared
+        );
+
+        if (res != PreProcessResult_Ok) {
+            return res;
+        }
+    }
 
     for (size_t i = 0; i < raw_data_len; ++i) {
 
-        double v_squared_here = velocity_squared_from_pitot_static(raw_data[i].pitot_static_height_difference, params);
+        double v_squared_here;
+        {
+            PreProcessResult res = velocity_squared_from_pitot_static(
+                raw_data[i].pitot_static_height_difference,
+                params,
+                &v_squared_here
+            );
+
+            if (res != PreProcessResult_Ok) {
+                return res;
+            }
+        }
 
         // This pressure is offset by the atmospheric pressure. That is fine because atmospheric pressure
         // is constant above and below the wing so cannot contribute to lift.
@@ -124,14 +163,18 @@ static double calculate_lift_per_unit_length(const PreProcessedDataPoint *data, 
 }
 
 static double uncertain_with_error(double best_guess, double error) {
+#ifndef LOCAL
+
+#ifdef GAUSSIAN
+    return libUncertainDoubleGaussDist(best_guess, error);
+#else
     // Interpret the error as the stddev of a uniform distribution. We could alternatively
     // use a normal distribution here
     double range = error * sqrt(12);
-#ifndef LOCAL
-    return libUncertainDoubleGaussDist(best_guess, 0);
-    // return libUncertainDoubleNormalDist(best_guess - range / 2, best_guess + range / 2);
+    return libUncertainDoubleUniformDist(best_guess - range / 2, best_guess + range / 2);
+#endif
 #else
-    (void)range;
+    (void)error;
     return best_guess;
 #endif // LOCAL
 }
@@ -154,7 +197,7 @@ int main() {
 
     double error_in_height_differences = 0.2e-3;
 
-    // Uncertainty in angle of each section in radians
+    // Uncertainty in angle of each section in radians.
     double error_in_shape = M_PI * 2 * 5e-3;
 
 
@@ -227,14 +270,17 @@ int main() {
         .stream_fluid_density = uncertain_with_error(0.965, 0.00163),
         .pitot_static_fluid_density = 1000,
         .g = 0.981,
+        .tube_angle_adjust = uncertain_with_fractional_error(0.2, 0.05),
         .airflow_pitot_static_height_difference = uncertain_with_error(0.057, error_in_height_differences),
     };
 
+#ifdef DEBUG
     printf(
         "input param stream_fluid_density %f -+ %f\n",
         params.stream_fluid_density,
         get_uncertain_error(params.stream_fluid_density)
     );
+#endif
 
     PreProcessedDataPoint processed_data[n_data_points];
 
