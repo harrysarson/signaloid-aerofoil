@@ -1,6 +1,8 @@
 #include <math.h>
 #include <stdio.h>
 
+#define GAUSSIAN
+
 #ifndef LOCAL
 
 #include <uncertain.h>
