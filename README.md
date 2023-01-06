@@ -79,6 +79,39 @@ This would save me from manually inspecting the programs output each time.
 As well as running `gcc` I also ran `g++`.
 You get better compiler errors and warnings when in c++ mode.
 
+### Output
+
+> Repository commit was ea5a6e22bdc8
+
+Running the program on signaloid (using the C0-l+ processor) I get the output
+
+    Lift is 1.055489 -+ 1.081244
+
+with the following distribution for lift:
+
+![](images/readme/c0-lplus-ea5a622-final-answer.png)
+
+Running on other processors gave the following results:
+
+| Processor        | Result                         |
+| ---------------- | ------------------------------ |
+| C0-S             | `Lift is 1.057530 -+ 0.490797` |
+| C0-S+            | `Lift is 1.047097 -+ 1.084021` |
+| C0-M             | `Lift is 1.049199 -+ 0.492445` |
+| C0-M+            | `Lift is 1.051024 -+ 1.080367` |
+| C0-L             | `Lift is 1.051772 -+ 0.491748` |
+| C0-L+            | `Lift is 1.055489 -+ 1.081244` |
+| C0-Bypass        | (build error)                  |
+| C0-Reference (1) | `Lift is 0.809613 -+ 0.000000` |
+| C0-Reference (2) | `Lift is 1.254087 -+ 0.000000` |
+| C0-Reference (3) | `Lift is 0.989573 -+ 0.000000` |
+| C0-Reference (4) | `Lift is 0.793089 -+ 0.000000` |
+| C0-Reference (5) | `Lift is 1.056263 -+ 0.000000` |
+| C0-Reference (6) | `Lift is 1.720896 -+ 0.000000` |
+
+The reference architecture gives a different answer each time, the range of values fall with in the distribution given by the other processors.
+The stddev of the 5 C0-Reference sample runs is about `1/3`.
+Autocorrelation tracking gives uncertainty twice that given without the tracking.
 
 ## Signloid and libUncertain
 

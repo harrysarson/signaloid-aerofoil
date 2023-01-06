@@ -59,6 +59,12 @@ The UI should probably make this clearer.
 
 I talk about these in the README.
 
+### Cannot define with command line arguments
+
+I have tried using `-DGAUSSIAN` in the command line arguments box but it does not seem to have any effect when the program is compiled.
+
+![](images/notes/command-line-args-do-not-work.png)
+
 ## Docs
 
 ### Create uncertain values
