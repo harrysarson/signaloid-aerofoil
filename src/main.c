@@ -7,8 +7,6 @@
 
 #endif // Local
 
-#define DEBUG
-
 /// Model of lift over aerofoil.
 ///
 /// All quantities are in SI units.
