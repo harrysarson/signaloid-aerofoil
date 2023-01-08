@@ -159,6 +159,10 @@ static double calculate_lift_per_unit_length(const PreProcessedDataPoint *data, 
 #endif
 
         lift += lift_i;
+
+#ifdef DEBUG
+        printf("total lift is %f\n", lift);
+#endif
     }
 
     return lift;
