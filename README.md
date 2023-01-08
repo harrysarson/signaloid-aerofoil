@@ -112,7 +112,12 @@ Running on other processors gave the following results:
 The reference architecture gives a different answer each time, with the standard deviation of the 6 C0-Reference sample runs about `0.3`.
 Autocorrelation tracking gives uncertainty twice that given without autocorrelation tracking.
 
-The probability distribution for lift has a triangular shape.
+The probability distribution for lift has a triangular shape when using autocorrelation tracking.
+This is surprising as the lift is a sum of random variables and so I would expect its distribution to look more gaussian.
+
+With autocorrelation tracking turned off the distribution looks much more Gaussian.
+The distribution shape suggests that uncertainty of all the lift measurements have meaningful correlation with each other.
+These correlations mean that the central limit theorem (which would cause the Gaussian shaped probability distribution) does not hold.
 
 
 ## Signloid and libUncertain
