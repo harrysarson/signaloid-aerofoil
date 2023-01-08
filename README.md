@@ -172,4 +172,4 @@ As `libUncertain` is a closed source library I was not able to dig any deeper in
 ### Signaloid cloud UX
 
 The site is fairly simple to use, the integration with github was particularly nice.
-I have some feedback on the UX -- should that be welcome -- in the file [signaloid-feedback.md]()
+I have some feedback on the UX -- should that be welcome -- in the file [signaloid-feedback.md](./signaloid-feedback.md).
