@@ -30,12 +30,12 @@ The atmospheric pressure exerts exactly the same upward force and downwards forc
 
 ### Pitot-static readings
 
-Each pitot-static reading gives a height difference ` Δh_`, I calculated `v_i` from the height difference as follows
+Each pitot-static reading gives a height difference `Δh_i`, I calculated `v_i` from the height difference as follows
 
 
     v_i ** 2 = 2 * 𝜌_w * g * Δh_i * K / 𝜌_f;
 
-where `𝜌_w` is the density of the fluid in the pitot-static tube, g is the accelatation due to gravity and `K` is a factor to adjust for the angle of the pitot-static tube. In our case `K = 0.2`.
+where `𝜌_w` is the density of the fluid in the pitot-static tube, `g` is the acceleration due to gravity and `K` is a factor to adjust for the angle of the pitot-static tube. In our case `K = 0.2`.
 
 ### Lift
 
@@ -43,7 +43,7 @@ where `𝜌_w` is the density of the fluid in the pitot-static tube, g is the ac
 
     lift = integral( p * n * k * dS )
 
-I simply this vector dot product part using the assumptions into
+Using the assumptions above, I simply this integral into
 
     lift = sum ( - p_i * cos(θ_i) * x_i )
 
@@ -54,7 +54,8 @@ where `θ_i` and `x_i` are shown in the diagram of the aerofoil model above and 
 I took input data from a write-up of a wind tunnel test on a NACA 0012 aerofoil [[1]].
 I chose this input data as the write-up contained uncertainty estimates as well as raw input data.
 The write-up also contained results (both best guess's for the lift coefficient and uncertainty results) that I could have used to verify my model and my calculations.
-However, I chose to focus my effort on the c programming and the Signaloid platform as this interests me more than the fluid dynamic part of the exercise.
+However, instead of doing this verification, I chose to focus my effort on the c programming and the Signaloid platform.
+I found these the most interesting parts of the exercise.
 
 [1]: https://www.researchgate.net/publication/319649582_Wind_Tunnel_Testing_of_a_NACA0012_Aerofoil/link/59b7d716a6fdcc7415c01042/download#
 
@@ -69,15 +70,14 @@ The program has four main parts.
 
 I found it easiest to compile and run the program locally using
 
-    gcc src/main.c -lm -Wall -Wextra -fsanitize=undefined -Wvla -DLOCAL -fsanitize=undefined;
+    gcc src/main.c -lm -Wall -Wextra -fsanitize=undefined -Wvla -DLOCAL -fsanitize=undefined
 
-Then, once I was happy with the result of running locally, I committed my changes, pushed to github and ran the program on Signaloid via the "Repositories" tab.
-This gave me quick feedback on syntax or logical errors.
+Once I was happy with the result of running locally, I committed, pushed to github and ran the program on Signaloid via the "Repositories" tab.
+Local builds gave me quick feedback on syntax and logical errors.
 If I were to work further on this project I would automate the process of checking for logical errors via writing unit tests.
-This would save me from manually inspecting the programs output each time.
+This would save me the work of manually inspecting the programs output after each run.
 
-As well as running `gcc` I also ran `g++`.
-You get better compiler errors and warnings when in c++ mode.
+As well as running `gcc` I also ran `g++` as you get better compiler errors and warnings when in c++ mode.
 
 ### Output
 
@@ -109,18 +109,15 @@ Running on other processors gave the following results:
 | C0-Reference (5) | `Lift is 1.056263 -+ 0.000000` |
 | C0-Reference (6) | `Lift is 1.720896 -+ 0.000000` |
 
-The reference architecture gives a different answer each time, the range of values fall with in the distribution given by the other processors.
-The stddev of the 5 C0-Reference sample runs is about `1/3`.
-Autocorrelation tracking gives uncertainty twice that given without the tracking.
+The reference architecture gives a different answer each time, with the standard deviation of the 6 C0-Reference sample runs about `0.3`.
+Autocorrelation tracking gives uncertainty twice that given without autocorrelation tracking.
 
 ## Signloid and libUncertain
 
-I injected uncertainty into the model by defining the inputs as uniform probability distributions using the function `libUncertainDoubleUniformDist `.
+I injected uncertainty into the model by defining the inputs as uniform probability distributions using the function `libUncertainDoubleUniformDist`.
 This function is undocumented but used extensively in examples.
 
-### Alternative Gaussian distribution
-
-The uncertainty in the model inputs could be more accurately represented as a Gaussian distribution.
+The uncertainty in the model inputs could be more accurately represented by Gaussian distributions.
 I attempted to check the affect of using Gaussian inputs (via `libUncertainDoubleGaussDist`) on the output distribution for lift.
 Unfortunately I could not get Signaloid to produce sensible results when using Gaussian distributions.
 For example the following program fails its assertions
@@ -175,4 +172,4 @@ As `libUncertain` is a closed source library I was not able to dig any deeper in
 ### Signaloid cloud UX
 
 The site is fairly simple to use, the integration with github was particularly nice.
-I have some feedback on the UX -- should that be welcome -- in the file [notes.md](notes.md#Signaloid)
+I have some feedback on the UX -- should that be welcome -- in the file [signaloid-feedback.md]()
