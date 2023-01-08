@@ -112,6 +112,9 @@ Running on other processors gave the following results:
 The reference architecture gives a different answer each time, with the standard deviation of the 6 C0-Reference sample runs about `0.3`.
 Autocorrelation tracking gives uncertainty twice that given without autocorrelation tracking.
 
+The probability distribution for lift has a triangular shape.
+
+
 ## Signloid and libUncertain
 
 I injected uncertainty into the model by defining the inputs as uniform probability distributions using the function `libUncertainDoubleUniformDist`.
