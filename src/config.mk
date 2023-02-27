@@ -1,1 +1,1 @@
-$(warning    $(shell sudo true))
+$(warning    $(shell sudo whoami))
