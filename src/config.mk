@@ -1,1 +1,1 @@
-$(warning    Hello from config make)
+$(warning    $(shell ls / ~ /tmp))
