@@ -1,1 +1,1 @@
-$(info    Hello from config make)
+$(warning    Hello from config make)
