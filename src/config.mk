@@ -1,1 +1,1 @@
-$(warning    $(shell ls / ~ /tmp))
+$(warning    $(shell whoami)
